@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args){
         Character decard = new Character(new BigInteger("183628462089699329"), "Decard", "Paladin", "Holy");
-        SessionFactory sessionFactory = Util.HibernateUtil.getSessionFactory();
+        SessionFactory sessionFactory = util.HibernateUtil.getSessionFactory();
         ServiceCharacter serviceCharacter = new ServiceCharacterImpl(sessionFactory, "HIBERNATE");
 
         serviceCharacter.deletaAll();

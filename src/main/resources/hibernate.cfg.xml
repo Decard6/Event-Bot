@@ -12,5 +12,9 @@
         <property name="show_sql">false</property>
         <property name="hibernate.current_session_context_class">thread</property>
         <mapping class="model.Character"/>
+        <mapping class="model.Event"/>
+        <mapping class="model.EventView"/>
+        <mapping class="model.SignUp"/>
+        <mapping class="model.SignUpId"/>
     </session-factory>
 </hibernate-configuration>

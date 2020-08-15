@@ -45,7 +45,7 @@ public class ServiceCharacterImpl implements ServiceCharacter {
     @Override
     public List<Character> findAll() {
         List<Character> entities = dao.findAll();
-        return findAll();
+        return entities;
     }
 
     @Override
