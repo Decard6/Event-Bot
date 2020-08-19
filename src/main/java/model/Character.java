@@ -1,27 +1,43 @@
 package model;
 
-import javax.persistence.Column;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NaturalIdCache;
+import org.hibernate.annotations.Cache;
+
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.math.BigInteger;
+import java.util.*;
 
-@Entity
+@Entity (name = "character")
 @Table (name = "characters")
-public class Character {
+@NaturalIdCache
+@Cache(
+        usage = CacheConcurrencyStrategy.READ_WRITE
+)
+public class Character implements model.Entity<String>, Fetchable<SignUp> {
 
-    @Column (name = "DiscordID", nullable = false, unique = true)
+    @Column (name = "user_id", nullable = false, unique = true)
     private BigInteger discordID;
 
     @Id
-    @Column (name = "CharName", nullable = false, unique = true, length = 12)
+    @Column (name = "name", nullable = false, unique = true, length = 12)
     private String charName;
 
-    @Column (name = "ClassName", nullable = false, length = 20)
+    @Column (name = "class_name", nullable = false, length = 20)
     private String className;
 
-    @Column (name = "Spec", length = 32)
+    @Column (name = "spec", length = 32)
     private String spec;
+
+    @OneToMany(
+            mappedBy = "character",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<SignUp> signUps = new ArrayList<>();
 
     public Character(){}
 
@@ -30,6 +46,14 @@ public class Character {
         this.charName = charName;
         this.className = className;
         this.spec = spec;
+    }
+
+    public List<SignUp> getSignUps() {
+        return signUps;
+    }
+
+    public void setSignUps(List<SignUp> signUps) {
+        this.signUps = signUps;
     }
 
     public BigInteger getDiscordID() {
@@ -75,5 +99,15 @@ public class Character {
     public String toString() {
         String output = String.format("%-13s %-13s %s", charName + ",", className + ",", spec);
         return output;
+    }
+
+    @Override
+    public String getID() {
+        return getCharName();
+    }
+
+    @Override
+    public List<SignUp> fetch() {
+        return getSignUps();
     }
 }

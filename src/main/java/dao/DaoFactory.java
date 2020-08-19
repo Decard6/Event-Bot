@@ -4,7 +4,7 @@ import org.hibernate.SessionFactory;
 
 import java.io.Serializable;
 
-public class DaoFactory<T, PK extends Serializable> {
+public class DaoFactory<T extends model.Entity<PK>, PK extends Serializable> {
     private SessionFactory sessionFactory;
     private Class<T> type;
 
@@ -13,11 +13,11 @@ public class DaoFactory<T, PK extends Serializable> {
         this.type = type;
     }
 
-    public Dao getDao(String daoType){
+    public Dao<T, PK> getDao(String daoType){
         if(daoType == null)
             return null;
         else if(daoType.equalsIgnoreCase("HIBERNATE"))
-            return new DaoHibernate<T, PK>(sessionFactory, type);
+            return new DaoHibernate<>(sessionFactory, type);
 
         return null;
     }

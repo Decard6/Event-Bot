@@ -1,5 +1,7 @@
 package dao;
 
+import model.Fetchable;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
 import java.io.Serializable;
@@ -10,16 +12,15 @@ import org.hibernate.Transaction;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
-public class DaoHibernate<T, PK extends Serializable> implements Dao<T, PK> {
+public class DaoHibernate<T extends model.Entity<PK>, PK extends Serializable> implements Dao<T, PK> {
     private Class<T> type;
     private SessionFactory sessionFactory;
     private Session currentSession;
     private Transaction currentTransaction;
 
-    @SuppressWarnings("unchecked")
+
     public DaoHibernate(SessionFactory sessionFactory, Class<T> type){
         this.sessionFactory = sessionFactory;
-
         this.type = type;
     }
 
@@ -41,18 +42,6 @@ public class DaoHibernate<T, PK extends Serializable> implements Dao<T, PK> {
     private void closeSessionwithTransaction() {
         currentTransaction.commit();
         currentSession.close();
-    }
-
-    public void setCurrentSession(Session currentSession) {
-        this.currentSession = currentSession;
-    }
-
-    public Transaction getCurrentTransaction() {
-        return currentTransaction;
-    }
-
-    public void setCurrentTransaction(Transaction currentTransaction) {
-        this.currentTransaction = currentTransaction;
     }
 
     @Override
@@ -81,6 +70,9 @@ public class DaoHibernate<T, PK extends Serializable> implements Dao<T, PK> {
         try{
             openSession();
             entity = (T) currentSession.get(type, pk);
+            if(entity instanceof Fetchable){
+                Hibernate.initialize(((Fetchable) entity).fetch());
+            }
         } finally {
             closeSession();
         }
@@ -105,8 +97,7 @@ public class DaoHibernate<T, PK extends Serializable> implements Dao<T, PK> {
         CriteriaBuilder builder = currentSession.getCriteriaBuilder();
         CriteriaQuery<T> criteria = builder.createQuery(type);
         criteria.from(type);
-        List<T> entities = currentSession.createQuery(criteria).getResultList();
-        return entities;
+        return currentSession.createQuery(criteria).getResultList();
     }
 
     @Override

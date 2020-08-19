@@ -1,42 +1,29 @@
-create table Characters (
-DiscordID bigint not null unique,
-CharName varchar(12) not null unique primary key,
-ClassName varchar(20) not null,
-Spec varchar(32)
+create table characters (
+	user_id bigint not null unique,
+	name varchar(12) not null unique primary key,
+	class_name varchar(20) not null,
+	spec varchar(32)
 );
 
-create table Events (
-EventID int unsigned auto_increment primary key,
-EventName varchar(64) not null,
-EventDate date not null,
-ChannelID bigint not null,
-MessageID bigint
+create table events (
+	id int unsigned auto_increment primary key,
+	name varchar(64) not null,
+	date timestamp	not null,
+	channel_id bigint not null,
+	message_id bigint
 );
 
-create table SignUps (
-EventID int unsigned not null,
-CharName varchar(12) not null,
-SignUpStatus tinyint default 0,
-ConfirmStatus tinyint default 0,
-foreign key (EventID)
-	references Events (EventID)
-	on update cascade on delete cascade,
-foreign key (CharName)
-	references Characters (CharName)
-	on update cascade on delete cascade,
-primary key(EventID, CharName)
+create table signups (
+	event_id int unsigned not null,
+	character_name varchar(12) not null,
+	signup_status tinyint default 0,
+	confirm_status tinyint default 0,
+	foreign key (event_id)
+	references events (id)
+		on update restrict on delete restrict,
+	foreign key (char_name)
+	references characters (name)
+		on update restrict on delete restrict,
+	primary key(event_id, char_name)
 );
 
-create view EventView
-as
-select
-	EventID,
-	CharName,
-	ClassName,
-	Spec,
-	SignUpStatus,
-	ConfirmStatus
-from
-	events
-natural join
-	characters;

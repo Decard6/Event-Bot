@@ -2,13 +2,14 @@ package service;
 
 import model.Character;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface Service<T, PK> {
+public interface Service<T extends model.Entity, PK extends Serializable> {
     void persist(T entity);
     void update(T entity);
-    Character findById(PK pk);
+    T findById(PK pk);
     void delete(PK pk);
-    List<Character> findAll();
+    List<T> findAll();
     void deletaAll();
 }

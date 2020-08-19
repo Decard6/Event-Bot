@@ -1,28 +1,19 @@
 
 import model.Character;
-
+import model.Event;
+import model.SignUp;
+import model.SignUpId;
 import org.hibernate.SessionFactory;
-import service.ServiceCharacter;
-import service.ServiceCharacterImpl;
-
-import java.math.BigInteger;
+import service.Service;
+import service.ServiceFactory;
 
 public class Main {
 
     public static void main(String[] args){
-        Character decard = new Character(new BigInteger("183628462089699329"), "Decard", "Paladin", "Holy");
         SessionFactory sessionFactory = util.HibernateUtil.getSessionFactory();
-        ServiceCharacter serviceCharacter = new ServiceCharacterImpl(sessionFactory, "HIBERNATE");
-
-        serviceCharacter.deletaAll();
-        serviceCharacter.delete(decard.getCharName());
-        serviceCharacter.persist(decard);
-        Character found = serviceCharacter.findById("Decard");
-        System.out.println(found.toString());
-        found.setClassName("Death Knight");
-        serviceCharacter.update(found);
-        found = serviceCharacter.findById("Decard");
-        System.out.println(found.toString());
-        serviceCharacter.delete(found.getCharName());
+        ServiceFactory serviceFactory = new ServiceFactory(sessionFactory, "HIBERNATE");
+        Service<Character, String> serviceCharacter = serviceFactory.getCharacterService();
+        Service<SignUp, SignUpId> signUpService = serviceFactory.getSignUpService();
+        Service<Event,Long> eventService = serviceFactory.getEventService();
     }
 }

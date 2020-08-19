@@ -5,7 +5,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost/event_bot</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost/event_bot?useTimezone=true&amp;serverTimezone=Europe/Warsaw</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">lubieplacki</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
@@ -13,7 +13,6 @@
         <property name="hibernate.current_session_context_class">thread</property>
         <mapping class="model.Character"/>
         <mapping class="model.Event"/>
-        <mapping class="model.EventView"/>
         <mapping class="model.SignUp"/>
         <mapping class="model.SignUpId"/>
     </session-factory>

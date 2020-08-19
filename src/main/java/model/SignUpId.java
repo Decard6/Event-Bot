@@ -8,18 +8,25 @@ import java.util.Objects;
 @Embeddable
 public class SignUpId implements Serializable {
 
-    @Column (name = "EventID")
-    private Long eventID;
+    @Column(name = "event_id")
+    private Long eventId;
 
-    @Column (name = "CharName")
+    @Column(name = "char_name")
     private String charName;
 
-    public Long getEventID() {
-        return eventID;
+    public SignUpId(){}
+
+    public SignUpId(long eventId, String charName){
+        this.eventId = eventId;
+        this.charName = charName;
     }
 
-    public void setEventID(Long eventID) {
-        this.eventID = eventID;
+    public Long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(Long eventID) {
+        this.eventId = eventID;
     }
 
     public String getCharName() {
@@ -42,11 +49,11 @@ public class SignUpId implements Serializable {
 
         SignUpId that = (SignUpId)obj;
 
-        return eventID.equals(that.getEventID()) && charName.equals(that.getCharName());
+        return eventId.equals(that.getEventId()) && charName.equals(that.getCharName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(eventID, charName);
+        return Objects.hash(eventId, charName);
     }
 }
