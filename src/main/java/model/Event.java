@@ -4,7 +4,6 @@ import util.SignUpComparator;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -25,10 +24,10 @@ public class Event implements model.Entity<Long>, Fetchable<SignUp>{
     private Date eventDate;
 
     @Column (name = "channel_id")
-    private BigInteger channelID;
+    private long channelID;
 
     @Column (name = "message_id")
-    private BigInteger messageID;
+    private long messageID;
 
     @OneToMany(
             mappedBy = "event",
@@ -40,20 +39,20 @@ public class Event implements model.Entity<Long>, Fetchable<SignUp>{
 
     public Event(){}
 
-    public Event(String eventName, Date eventDate, BigInteger channelID){
+    public Event(String eventName, Date eventDate, long channelID){
         this.eventName = eventName;
         this.eventDate = eventDate;
         this.channelID = channelID;
     }
 
-    public Event(String eventName, Date eventDate, BigInteger channelID, BigInteger messageID){
+    public Event(String eventName, Date eventDate, long channelID, long messageID){
         this.eventName = eventName;
         this.eventDate = eventDate;
         this.channelID = channelID;
         this.messageID = messageID;
     }
 
-    public Event(long eventId, String eventName, Date eventDate, BigInteger channelID, BigInteger messageID){
+    public Event(long eventId, String eventName, Date eventDate, long channelID, long messageID){
         this.eventId = eventId;
         this.eventName = eventName;
         this.eventDate = eventDate;
@@ -93,19 +92,19 @@ public class Event implements model.Entity<Long>, Fetchable<SignUp>{
         this.eventDate = eventDate;
     }
 
-    public BigInteger getChannelID() {
+    public long getChannelID() {
         return channelID;
     }
 
-    public void setChannelID(BigInteger channelID) {
+    public void setChannelID(long channelID) {
         this.channelID = channelID;
     }
 
-    public BigInteger getMessageID() {
+    public long getMessageID() {
         return messageID;
     }
 
-    public void setMessageID(BigInteger messageID) {
+    public void setMessageID(long messageID) {
         this.messageID = messageID;
     }
 
@@ -166,7 +165,7 @@ public class Event implements model.Entity<Long>, Fetchable<SignUp>{
         while(stringBuilder.charAt(stringBuilder.length() - 1) == '\n')
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
 
-        return String.format("%s%s", header, stringBuilder.toString());
+        return String.format("```%s%s```", header, stringBuilder.toString());
     }
 
     private String statusListString(String string, List<SignUp> list){

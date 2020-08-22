@@ -67,7 +67,7 @@ public class DaoHibernate<T extends model.Entity<PK>, PK extends Serializable> i
     @Override
     public T findById(PK pk) {
         T entity;
-        try{
+        try {
             openSession();
             entity = (T) currentSession.get(type, pk);
             if(entity instanceof Fetchable){

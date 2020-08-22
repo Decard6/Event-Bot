@@ -16,14 +16,14 @@ public class ServiceFactory {
     }
 
     public ServiceImpl<model.Character, String> getCharacterService(){
-        return new ServiceImpl<>(sessionFactory, "HIBERNATE", Character.class);
+        return new ServiceImpl<>(sessionFactory, daoType, Character.class);
     }
 
     public ServiceImpl<Event, Long> getEventService(){
-        return new ServiceImpl<>(sessionFactory, "HIBERNATE", Event.class);
+        return new ServiceImpl<>(sessionFactory, daoType, Event.class);
     }
 
     public ServiceImpl<SignUp, SignUpId> getSignUpService(){
-        return new ServiceImpl<>(sessionFactory, "HIBERNATE", SignUp.class);
+        return new ServiceImpl<>(sessionFactory, daoType, SignUp.class);
     }
 }

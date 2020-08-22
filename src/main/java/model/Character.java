@@ -1,13 +1,11 @@
 package model;
 
-import org.hibernate.Hibernate;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalIdCache;
 import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.math.BigInteger;
 import java.util.*;
 
 @Entity (name = "character")
@@ -19,7 +17,7 @@ import java.util.*;
 public class Character implements model.Entity<String>, Fetchable<SignUp> {
 
     @Column (name = "user_id", nullable = false, unique = true)
-    private BigInteger discordID;
+    private long discordID;
 
     @Id
     @Column (name = "name", nullable = false, unique = true, length = 12)
@@ -41,7 +39,7 @@ public class Character implements model.Entity<String>, Fetchable<SignUp> {
 
     public Character(){}
 
-    public Character(BigInteger discordID, String charName, String className, String spec){
+    public Character(long discordID, String charName, String className, String spec){
         this.discordID = discordID;
         this.charName = charName;
         this.className = className;
@@ -56,11 +54,11 @@ public class Character implements model.Entity<String>, Fetchable<SignUp> {
         this.signUps = signUps;
     }
 
-    public BigInteger getDiscordID() {
+    public long getDiscordID() {
         return discordID;
     }
 
-    public void setDiscordID(BigInteger discordID) {
+    public void setDiscordID(long discordID) {
         this.discordID = discordID;
     }
 
