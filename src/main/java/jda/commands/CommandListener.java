@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Queue;
 
 public class CommandListener extends ListenerAdapter {
-    private char prefix = '!';
+    private char prefix = '%';
     private JDA jda;
     private Command command;
     private Queue<Action> actionQueue;
@@ -24,6 +24,9 @@ public class CommandListener extends ListenerAdapter {
         this.jda = jda;
         this.actionQueue = actionQueue;
         command = new GeneralCommand(jda, actionQueue);
+
+        String prefixString = System.getenv("BOT_PREFIX");
+        prefix = prefixString.charAt(0);
     }
 
     @Override
