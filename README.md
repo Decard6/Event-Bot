@@ -13,3 +13,4 @@
   DB_USER <br />
   DB_PASSWORD <br />
 6. Deploy / Set auto-deployment.
+7. Type "{prefix}event help" or "{prefix}char help" in your command channel to get a list of available commands. 
