@@ -9,7 +9,9 @@ public interface Service<T extends model.Entity, PK extends Serializable> {
     void persist(T entity);
     void update(T entity);
     T findById(PK pk);
+    T findCustom(String naturalId, long id);
     void delete(PK pk);
     List<T> findAll();
     void deletaAll();
+
 }

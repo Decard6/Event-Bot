@@ -4,10 +4,10 @@
 
 <hibernate-configuration>
     <session-factory>
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost/event_bot?useTimezone=true&amp;serverTimezone=Europe/Warsaw</property>
-        <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">lubieplacki</property>
+        <property name="hibernate.dialect">@db_dialect@</property>
+        <property name="hibernate.connection.url">@db_url@</property>
+        <property name="hibernate.connection.username">@db_user@</property>
+        <property name="hibernate.connection.password">@db_password@</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="show_sql">false</property>
         <property name="hibernate.current_session_context_class">thread</property>

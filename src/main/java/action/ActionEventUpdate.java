@@ -39,9 +39,9 @@ public class ActionEventUpdate implements Action {
         eventService.update(event);
 
         //refresh event message
-        TextChannel eventChannel = jda.getTextChannelById(event.getChannelID());
+        TextChannel eventChannel = jda.getTextChannelById(event.getChannelId());
         String messageString = event.toString();
-        long messageId = event.getMessageID();
+        long messageId = event.getMessageId();
         assert eventChannel != null;
         eventChannel.editMessageById(messageId, messageString).queue();
     }

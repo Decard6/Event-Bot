@@ -35,6 +35,11 @@ public class ServiceImpl<T extends model.Entity<PK>, PK extends Serializable> im
     }
 
     @Override
+    public T findCustom(String field, long id) {
+        return dao.findCustom(field, id);
+    }
+
+    @Override
     public void delete(PK pk) {
         T found = dao.findById(pk);
         if(found != null)

@@ -41,9 +41,9 @@ public class ActionCharacterUpdate implements Action{
             Event event = eventService.findById(signUp.getID().getEventId());
 
             //update message
-            TextChannel eventChannel = jda.getTextChannelById(event.getChannelID());
+            TextChannel eventChannel = jda.getTextChannelById(event.getChannelId());
             String messageString = event.toString();
-            long messageId = event.getMessageID();
+            long messageId = event.getMessageId();
             assert eventChannel != null;
             eventChannel.editMessageById(messageId, messageString).queue();
         }

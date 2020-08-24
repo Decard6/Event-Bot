@@ -14,10 +14,14 @@ import java.util.*;
 @Cache(
         usage = CacheConcurrencyStrategy.READ_WRITE
 )
-public class Character implements model.Entity<String>, Fetchable<SignUp> {
+public class Character implements model.Entity<String>, Fetchable<SignUp>, HasCustomSearch {
 
     @Column (name = "user_id", nullable = false, unique = true)
-    private long discordID;
+    private long discordId;
+
+    public static String getCustomId(){
+        return "discordId";
+    }
 
     @Id
     @Column (name = "name", nullable = false, unique = true, length = 12)
@@ -39,8 +43,8 @@ public class Character implements model.Entity<String>, Fetchable<SignUp> {
 
     public Character(){}
 
-    public Character(long discordID, String charName, String className, String spec){
-        this.discordID = discordID;
+    public Character(long discordId, String charName, String className, String spec){
+        this.discordId = discordId;
         this.charName = charName;
         this.className = className;
         this.spec = spec;
@@ -54,12 +58,12 @@ public class Character implements model.Entity<String>, Fetchable<SignUp> {
         this.signUps = signUps;
     }
 
-    public long getDiscordID() {
-        return discordID;
+    public long getDiscordId() {
+        return discordId;
     }
 
-    public void setDiscordID(long discordID) {
-        this.discordID = discordID;
+    public void setDiscordId(long discordID) {
+        this.discordId = discordID;
     }
 
     public String getCharName() {
@@ -67,7 +71,7 @@ public class Character implements model.Entity<String>, Fetchable<SignUp> {
     }
 
     public void setCharName(String charName) {
-        this.charName = charName;
+            this.charName = charName;
     }
 
     public String getClassName() {
@@ -75,7 +79,7 @@ public class Character implements model.Entity<String>, Fetchable<SignUp> {
     }
 
     public void setClassName(String className) {
-        this.className = className;
+            this.className = className;
     }
 
     public String getSpec() {
@@ -83,7 +87,7 @@ public class Character implements model.Entity<String>, Fetchable<SignUp> {
     }
 
     public void setSpec(String spec) {
-        this.spec = spec;
+            this.spec = spec;
     }
 
     @Override

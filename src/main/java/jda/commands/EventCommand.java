@@ -9,25 +9,36 @@ import util.MyDateParser;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EventCommand implements Command{
     private JDA jda;
+    private Queue<Action> actionQueue;
 
-    EventCommand(JDA jda){
+    EventCommand(JDA jda, Queue<Action> actionQueue){
         this.jda = jda;
+        this.actionQueue = actionQueue;
     }
 
     @Override
     public void execute(String string, GuildMessageReceivedEvent guildMessageReceivedEvent){
-        String add = string.substring(0, 4);
-        String removeOrUpdate = string.substring(0, 7);
-        String help = string.substring(0, 4);
-        String confirm = string.substring(0, 8);
-        String confirmall = string.substring(0, 11);
+        String addOrHelp = "";
+        String removeOrUpdate = "";
+        String confirm = "";
+        String confirmall = "";
 
-        if(add.equalsIgnoreCase("add ")){
+        if(string.length() >= 4)
+            addOrHelp = string.substring(0, 4);
+        if(string.length() >= 7)
+            removeOrUpdate = string.substring(0, 7);
+        if(string.length() >= 8)
+            confirm = string.substring(0, 8);
+        if(string.length() >= 11)
+            confirmall = string.substring(0, 11);
+
+        if(addOrHelp.equalsIgnoreCase("add ")){
             String arguments = string.substring(4);
             add(arguments, guildMessageReceivedEvent);
         } else if(removeOrUpdate.equalsIgnoreCase("remove ")){
@@ -36,7 +47,7 @@ public class EventCommand implements Command{
         } else if(removeOrUpdate.equalsIgnoreCase("update ")){
             String arguments = string.substring(7);
             update(arguments, guildMessageReceivedEvent);
-        } else if(help.equalsIgnoreCase("help") || help.equalsIgnoreCase("")){
+        } else if(addOrHelp.equalsIgnoreCase("help")){
             help(guildMessageReceivedEvent);
         } else if(confirm.equalsIgnoreCase("confirm ")){
             String arguments = string.substring(8);
@@ -45,7 +56,10 @@ public class EventCommand implements Command{
             String arguments = string.substring(11);
             confirmAll(arguments, guildMessageReceivedEvent);
         } else {
-
+            String author = guildMessageReceivedEvent.getAuthor().getAsMention();
+            String error = "Not a command.";
+            String msg = String.format("%s %s", error, author);
+            guildMessageReceivedEvent.getChannel().sendMessage(msg).queue();
         }
     }
 
@@ -73,11 +87,11 @@ public class EventCommand implements Command{
             Long channelId = null;
 
             if(!textChannels.isEmpty()){
-                channelId = textChannels.get(1).getIdLong();
+                channelId = textChannels.get(0).getIdLong();
             }
 
-            if(eventName == null){
-                String error = "Null event name.";
+            if(eventName == null || eventName.length() > 64){
+                String error = "Null or too long event name.";
                 String msg = String.format("%s %s", author, error);
                 guildMessageReceivedEvent.getChannel().sendMessage(msg).queue();
             } else if(channelId == null){
@@ -86,8 +100,16 @@ public class EventCommand implements Command{
                 guildMessageReceivedEvent.getChannel().sendMessage(msg).queue();
             } else {
                 Action action = new ActionEventAdd(eventName, date, channelId);
-                //TODO - add action to queue
+                if(!offer(action)){
+                    String error = "Something went wrong. (Queue)";
+                    String msg = String.format("%s, %s", error, author);
+                    guildMessageReceivedEvent.getChannel().sendMessage(msg).queue();
+                }
             }
+        } else {
+            String error = "Something went wrong.";
+            String msg = String.format("%s %s", error, author);
+            guildMessageReceivedEvent.getChannel().sendMessage(msg).queue();
         }
     }
 
@@ -110,8 +132,16 @@ public class EventCommand implements Command{
             }
 
             Action action = new ActionEventRemove(eventId);
-            //TODO - add action to queue
+            if(!offer(action)){
+                String error = "Something went wrong. (Queue)";
+                String msg = String.format("%s, %s", error, author);
+                guildMessageReceivedEvent.getChannel().sendMessage(msg).queue();
+            }
 
+        } else {
+            String error = "Something went wrong.";
+            String msg = String.format("%s %s", error, author);
+            guildMessageReceivedEvent.getChannel().sendMessage(msg).queue();
         }
     }
 
@@ -145,26 +175,33 @@ public class EventCommand implements Command{
                 return;
             }
 
-            if(eventName == null){
-                String error = "Null event name.";
+            if(eventName == null || eventName.length() > 64){
+                String error = "Null or too long event name.";
                 String msg = String.format("%s %s", author, error);
                 guildMessageReceivedEvent.getChannel().sendMessage(msg).queue();
             } else {
                 Action action = new ActionEventUpdate(eventId, eventName, date);
-                //TODO - add action to queue
+                if(!offer(action)){
+                    String error = "Something went wrong. (Queue)";
+                    String msg = String.format("%s, %s", error, author);
+                    guildMessageReceivedEvent.getChannel().sendMessage(msg).queue();
+                }
             }
+        } else {
+            String error = "Something went wrong.";
+            String msg = String.format("%s %s", error, author);
+            guildMessageReceivedEvent.getChannel().sendMessage(msg).queue();
         }
     }
 
     private void help(GuildMessageReceivedEvent guildMessageReceivedEvent){
         String author = guildMessageReceivedEvent.getAuthor().getAsMention();
         char prefix = guildMessageReceivedEvent.getMessage().getContentRaw().charAt(0);
-        String prefixString = prefix + "";
-        String eventAdd = prefixString + "event add n=\"event name\" d=\"dd/mm/yyyy hh:mm\" c=\"channel name\"";
-        String eventRemove = prefixString + "event remove id";
-        String eventUpdate = prefixString + "event update id n=\"event name\" d=\"dd/mm/yyyy hh:mm\"";
-        String confirm = prefixString + "event confirm id n=\"char name\" status";
-        String confirmAll = prefixString + "event confirmall id";
+        String eventAdd = prefix + "event add n=\"event name\" d=\"dd/mm/yyyy hh:mm\" c=\"channel name\"";
+        String eventRemove = prefix + "event remove id";
+        String eventUpdate = prefix + "event update id n=\"event name\" d=\"dd/mm/yyyy hh:mm\"";
+        String confirm = prefix + "event confirm id n=\"char name\" status";
+        String confirmAll = prefix + "event confirmall id";
         String helpMessage = String.format(  "%s\n```%s\n%s\n%s\n%s\n%s```", author, eventAdd, eventRemove, eventUpdate, confirm, confirmAll);
         guildMessageReceivedEvent.getChannel().sendMessage(helpMessage).queue();
     }
@@ -209,8 +246,16 @@ public class EventCommand implements Command{
             }
 
             Action action = new ActionConfirm(eventId, characterName, status);
-            //TODO - add action to queue
+            if(!offer(action)){
+                String error = "Something went wrong. (Queue)";
+                String msg = String.format("%s, %s", error, author);
+                guildMessageReceivedEvent.getChannel().sendMessage(msg).queue();
+            }
 
+        } else {
+            String error = "Something went wrong.";
+            String msg = String.format("%s %s", error, author);
+            guildMessageReceivedEvent.getChannel().sendMessage(msg).queue();
         }
     }
 
@@ -232,7 +277,20 @@ public class EventCommand implements Command{
             }
 
             Action action = new ActionConfirmAll(eventId);
-            //TODO - add action to queue
+            if(!offer(action)){
+                String error = "Something went wrong. (Queue)";
+                String msg = String.format("%s, %s", error, author);
+                guildMessageReceivedEvent.getChannel().sendMessage(msg).queue();
+            }
+
+        } else {
+            String error = "Something went wrong.";
+            String msg = String.format("%s %s", error, author);
+            guildMessageReceivedEvent.getChannel().sendMessage(msg).queue();
         }
+    }
+
+    private boolean offer(Action action) {
+        return actionQueue.offer(action);
     }
 }

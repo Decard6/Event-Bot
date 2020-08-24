@@ -32,13 +32,14 @@ public class ActionConfirm implements Action {
         SignUp signUp = signUpService.findById(signUpId);
         if(signUp == null)
             return;
+        signUp.setConfirmStatus(status);
         signUpService.update(signUp);
 
         //fetch event and refresh event message
         Event event = eventService.findById(id);
-        TextChannel eventChannel = jda.getTextChannelById(event.getChannelID());
+        TextChannel eventChannel = jda.getTextChannelById(event.getChannelId());
         String messageString = event.toString();
-        long messageId = event.getMessageID();
+        long messageId = event.getMessageId();
         assert eventChannel != null;
         eventChannel.editMessageById(messageId, messageString).queue();
 

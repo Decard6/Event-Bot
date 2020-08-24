@@ -20,10 +20,9 @@ create table signups (
 	confirm_status tinyint default 0,
 	foreign key (event_id)
 	references events (id)
-		on update restrict on delete restrict,
+		on update cascade on delete cascade,
 	foreign key (char_name)
 	references characters (name)
-		on update restrict on delete restrict,
+		on update cascade on delete cascade,
 	primary key(event_id, char_name)
 );
-

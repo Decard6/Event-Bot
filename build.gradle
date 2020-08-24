@@ -6,6 +6,11 @@ plugins {
 group 'decard6.github.com'
 version '2.0'
 
+task myRun(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "jda.Main"
+}
+
 sourceCompatibility = 1.8
 
 repositories {
@@ -22,10 +27,28 @@ dependencies {
     implementation 'mysql:mysql-connector-java:8.0.11'
 }
 
+def db_user = System.getenv("DB_USER")
+def db_url = System.getenv('DB_URL')
+def db_dialect = System.getenv('DB_DIALECT')
+def db_password = System.getenv('DB_PASSWORD')
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+processResources {
+    filesMatching(['**/*.xml', '**/*.properties', '**/*.json']) {
+        filter ReplaceTokens, tokens: [
+                'db_user': db_user,
+                'db_password' : db_password,
+                'db_url': db_url,
+                'db_dialect': db_dialect,
+        ]
+    }
+}
+
 
 shadowJar{
     manifest {
-        attributes 'Implementation-Title': 'EventBot', 'Implementation-Version': version, 'Main-Class': ''
+        attributes 'Implementation-Title': 'EventBot', 'Implementation-Version': version, 'Main-Class': 'jda.Main'
     }
     baseName = 'EventBot'
     classifier = null

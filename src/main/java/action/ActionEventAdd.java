@@ -58,7 +58,7 @@ public class ActionEventAdd implements Action {
         event = eventService.findById(event.getID());
 
         //add message
-        TextChannel eventChannel = jda.getTextChannelById(event.getChannelID());
+        TextChannel eventChannel = jda.getTextChannelById(event.getChannelId());
         assert eventChannel != null;
         RestAction<Message> restAction = eventChannel.sendMessage("Placeholder");
         Message message = restAction.complete();
@@ -66,12 +66,12 @@ public class ActionEventAdd implements Action {
         message.editMessage(event.toString()).queue();
 
         //add emotes
-        message.addReaction(emoteSignUp).queue();
-        message.addReaction(emoteTentative).queue();
-        message.addReaction(emoteOut).queue();;
+        message.addReaction("U+1f49a").queue();
+        message.addReaction("U+1f49b").queue();
+        message.addReaction("U+1f494").queue();;
 
         //update messageId in db
-        event.setMessageID(messageId);
+        event.setMessageId(messageId);
         eventService.update(event);
     }
 }

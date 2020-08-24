@@ -9,7 +9,7 @@ import java.util.*;
 
 @Entity (name = "Event")
 @Table (name = "events")
-public class Event implements model.Entity<Long>, Fetchable<SignUp>{
+public class Event implements model.Entity<Long>, Fetchable<SignUp>, HasCustomSearch {
 
     @Id
     @Column (name = "id", nullable = false, unique = true)
@@ -24,10 +24,14 @@ public class Event implements model.Entity<Long>, Fetchable<SignUp>{
     private Date eventDate;
 
     @Column (name = "channel_id")
-    private long channelID;
+    private long channelId;
 
     @Column (name = "message_id")
-    private long messageID;
+    private long messageId;
+
+    public static String getCustomId(){
+        return "messageId";
+    }
 
     @OneToMany(
             mappedBy = "event",
@@ -39,25 +43,25 @@ public class Event implements model.Entity<Long>, Fetchable<SignUp>{
 
     public Event(){}
 
-    public Event(String eventName, Date eventDate, long channelID){
+    public Event(String eventName, Date eventDate, long channelId){
         this.eventName = eventName;
         this.eventDate = eventDate;
-        this.channelID = channelID;
+        this.channelId = channelId;
     }
 
-    public Event(String eventName, Date eventDate, long channelID, long messageID){
+    public Event(String eventName, Date eventDate, long channelId, long messageId){
         this.eventName = eventName;
         this.eventDate = eventDate;
-        this.channelID = channelID;
-        this.messageID = messageID;
+        this.channelId = channelId;
+        this.messageId = messageId;
     }
 
-    public Event(long eventId, String eventName, Date eventDate, long channelID, long messageID){
+    public Event(long eventId, String eventName, Date eventDate, long channelId, long messageId){
         this.eventId = eventId;
         this.eventName = eventName;
         this.eventDate = eventDate;
-        this.channelID = channelID;
-        this.messageID = messageID;
+        this.channelId = channelId;
+        this.messageId = messageId;
     }
 
     public List<SignUp> getSignUps() {
@@ -92,20 +96,20 @@ public class Event implements model.Entity<Long>, Fetchable<SignUp>{
         this.eventDate = eventDate;
     }
 
-    public long getChannelID() {
-        return channelID;
+    public long getChannelId() {
+        return channelId;
     }
 
-    public void setChannelID(long channelID) {
-        this.channelID = channelID;
+    public void setChannelId(long channelID) {
+        this.channelId = channelID;
     }
 
-    public long getMessageID() {
-        return messageID;
+    public long getMessageId() {
+        return messageId;
     }
 
-    public void setMessageID(long messageID) {
-        this.messageID = messageID;
+    public void setMessageId(long messageID) {
+        this.messageId = messageID;
     }
 
     @Override
@@ -162,7 +166,7 @@ public class Event implements model.Entity<Long>, Fetchable<SignUp>{
                 stringBuilder.append(string);
         }
 
-        while(stringBuilder.charAt(stringBuilder.length() - 1) == '\n')
+        while(stringBuilder.length()!=0 && stringBuilder.charAt(stringBuilder.length() - 1) == '\n')
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
 
         return String.format("```%s%s```", header, stringBuilder.toString());

@@ -2,6 +2,7 @@ package action;
 
 import model.Event;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.TextChannel;
 import org.hibernate.SessionFactory;
 import service.Service;
 import service.ServiceFactory;
@@ -17,6 +18,10 @@ public class ActionEventRemove implements Action {
     public void execute(SessionFactory sessionFactory, JDA jda) {
         ServiceFactory serviceFactory = new ServiceFactory(sessionFactory, daoType);
         Service<Event, Long> eventService = serviceFactory.getEventService();
+        Event event = eventService.findById(id);
+        TextChannel channel = jda.getTextChannelById(event.getChannelId());
+        if(channel != null)
+            channel.deleteMessageById(event.getMessageId()).queue();
         eventService.delete(id);
     }
 }
