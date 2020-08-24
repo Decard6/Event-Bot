@@ -6,8 +6,11 @@ plugins {
 group 'decard6.github.com'
 version '2.0'
 
-task stage(dependsOn: ['build', 'clean'])
-build.mustRunAfter clean
+task stage(dependsOn: ['build', 'clean', 'shadowJar']){
+    shadowJar.mustRunAfter clean
+    build.mustRunAfter shadowJar
+}
+
 
 task myRun(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
