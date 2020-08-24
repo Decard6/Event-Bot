@@ -6,6 +6,9 @@ plugins {
 group 'decard6.github.com'
 version '2.0'
 
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
+
 task myRun(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     main = "jda.Main"
