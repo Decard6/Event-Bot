@@ -180,7 +180,7 @@ public class Event implements model.Entity<Long>, Fetchable<SignUp>, HasCustomSe
         stringBuilder.append(string).append("\n");
         for(int i = 0; i<list.size(); i++){
             String characterString = list.get(i).getCharacter().toString();
-            String toAppend = String.format("%d. %s\n", i+1, characterString);
+            String toAppend = String.format("%2d. %s\n", i+1, characterString);
             stringBuilder.append(toAppend);
         }
         stringBuilder.append("\n");
