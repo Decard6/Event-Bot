@@ -3,6 +3,7 @@ package action;
 import net.dv8tion.jda.api.JDA;
 import org.hibernate.SessionFactory;
 
+import javax.persistence.PersistenceException;
 import java.util.Queue;
 
 public class ActionRunnable implements Runnable {
@@ -22,7 +23,13 @@ public class ActionRunnable implements Runnable {
         while(true){
             while(!actionQueue.isEmpty()){
                 Action action = actionQueue.poll();
-                action.execute(sessionFactory, jda);
+                //Try-catch block to prevent thread closure
+                try {
+                    action.execute(sessionFactory, jda);
+                } catch (PersistenceException e) {
+                    //Auto reconnects
+                    action.execute(sessionFactory, jda);
+                }
             }
             try {
                 Thread.sleep(100);
