@@ -19,6 +19,8 @@ public class ActionEventRemove implements Action {
         ServiceFactory serviceFactory = new ServiceFactory(sessionFactory, daoType);
         Service<Event, Long> eventService = serviceFactory.getEventService();
         Event event = eventService.findById(id);
+        if(event == null)
+            return;
         TextChannel channel = jda.getTextChannelById(event.getChannelId());
         if(channel != null)
             channel.deleteMessageById(event.getMessageId()).queue();
